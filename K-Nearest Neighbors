@@ -1,0 +1,56 @@
+# Baseline model of K-Nearest Neighbors
+knn = KNeighborsClassifier()
+knn_mod = knn.fit(X_train, y_train)
+print(f"Baseline K-Nearest Neighbors: {round(knn_mod.score(X_test, y_test), 3)}")
+pred_knn = knn_mod.predict(X_test)
+
+# Cross validate K-Nearest Neighbors model
+scores_knn = cross_val_score(knn, X_train, y_train, cv=3, scoring="accuracy")
+print(f"Scores(Cross validate) for K-Nearest Neighbors model:\n{scores_knn}")
+print(f"CrossValMeans: {round(scores_knn.mean(), 3)}")
+print(f"CrossValStandard Deviation: {round(scores_knn.std(), 3)}")
+params_knn = {"leaf_size": list(range(1,30)),
+              "n_neighbors": list(range(1,21)),
+              "p": [1,2],
+              "weights": ["uniform", "distance"],
+             }
+GridSearchCV_knn = GridSearchCV(estimator=KNeighborsClassifier(),
+                                param_grid=params_knn,
+                                cv=3,
+                                scoring="accuracy",
+                                return_train_score=True
+                                )
+# Fit model with train data
+GridSearchCV_knn.fit(X_train, y_train);
+print(f"Best estimator for KNN model:\n{GridSearchCV_knn.best_estimator_}")
+print(f"Best parameter values:\n{GridSearchCV_knn.best_params_}")
+print(f"Best score for GNB model: {round(GridSearchCV_knn.best_score_, 3
+
+# Test with new parameter
+knn = KNeighborsClassifier(leaf_size=1, n_neighbors=10, p=2, weights="distance")
+knn_mod = knn.fit(X_train, y_train)
+pred_knn = knn_mod.predict(X_test)
+
+mse_knn = mean_squared_error(y_test, pred_knn)
+rmse_knn = np.sqrt(mean_squared_error(y_test, pred_knn))
+score_knn_train = knn_mod.score(X_train, y_train)
+score_knn_test = knn_mod.score(X_test, y_test)
+
+print(f"Mean Square Error for K_Nearest Neighbor  = {round(mse_knn, 3)}")
+print(f"Root Mean Square Error for K_Nearest Neighbor = {round(rmse_knn, 3)}")
+print(f"R^2(coefficient of determination) on training set = {round(score_knn_train, 3)}")
+print(f"R^2(coefficient of determination) on testing set = {round(score_knn_test, 3)}")
+
+print("Classification Report")
+print(classification_report(y_test, pred_knn))
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, pred_knn))
+
+ax= plt.subplot()
+sns.heatmap(confusion_matrix(y_test, pred_knn), annot=True, ax = ax, cmap = "GnBu");
+
+ax.set_xlabel("Predicted Risk Levels");
+ax.set_ylabel("True Risk Levels");
+ax.set_title("Confusion Matrix");
+ax.xaxis.set_ticklabels(["Low", "Mid", "High"]);
+ax.yaxis.set_ticklabels(["Low", "Mid", "High"]);
