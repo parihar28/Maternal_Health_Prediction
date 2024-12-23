@@ -1,0 +1,2 @@
+# Drop SystolicBP for model training
+m_df = m_df.drop(["SystolicBP"], axis=1)
