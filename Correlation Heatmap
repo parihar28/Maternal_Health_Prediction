@@ -1,0 +1,6 @@
+# Create a correlation heatmap
+plt.figure(figsize=(22,20))
+sns.heatmap(m_df.corr(), annot=True, cmap = "GnBu")
+plt.title("Correlation Heatmap of Variables", fontsize=16)
+plt.savefig("maternal_heat_map_to_check_correlation.png")
+plt.show()
