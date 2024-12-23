@@ -1,0 +1,68 @@
+# Import necessary libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+
+# Load the dataset
+df = pd.read_csv('Maternal Health Risk Data Set.csv')
+
+# Separate features and target variable
+X = df.drop('RiskLevel', axis=1)  # Features
+y = df['RiskLevel']  # Target
+
+# Split the dataset with stratification to maintain class balance
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Check shapes
+print("X_train shape:", X_train.shape)
+print("X_test shape:", X_test.shape)
+print("y_train shape:", y_train.shape)
+print("y_test shape:", y_test.shape)
+
+# Calculate percentages
+train_percentage = len(y_train) / len(y) * 100
+test_percentage = len(y_test) / len(y) * 100
+print(f"Training set percentage: {train_percentage:.2f}%")
+print(f"Test set percentage: {test_percentage:.2f}%")
+
+# Plot class distribution in training and testing sets with percentages
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+# Plot for the training set
+sns.countplot(x=y_train, palette="viridis", ax=axes[0])
+axes[0].set_title(f'Class Distribution in Training Set ({train_percentage:.2f}%)')
+axes[0].set_xlabel('Risk Level')
+axes[0].set_ylabel('Count')
+
+# Add percentage annotations on the training set bars
+total_train = len(y_train)
+for p in axes[0].patches:
+    height = p.get_height()
+    axes[0].text(
+        p.get_x() + p.get_width() / 2,
+        height + 5,
+        f'{height / total_train * 100:.1f}%',
+        ha="center"
+    )
+
+# Plot for the test set
+sns.countplot(x=y_test, palette="viridis", ax=axes[1])
+axes[1].set_title(f'Class Distribution in Test Set ({test_percentage:.2f}%)')
+axes[1].set_xlabel('Risk Level')
+axes[1].set_ylabel('Count')
+
+# Add percentage annotations on the test set bars
+total_test = len(y_test)
+for p in axes[1].patches:
+    height = p.get_height()
+    axes[1].text(
+        p.get_x() + p.get_width() / 2,
+        height + 5,
+        f'{height / total_test * 100:.1f}%',
+        ha="center"
+    )
+
+# Show the plots
+plt.tight_layout()
+plt.show()
