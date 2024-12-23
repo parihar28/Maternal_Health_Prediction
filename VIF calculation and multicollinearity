@@ -1,0 +1,7 @@
+# Dealing with multicollinearity
+# Variance Inflation Factor (VIF) calculation
+X = m_df[["SystolicBP", "DiastolicBP"]]
+vif_data = pd.DataFrame()
+vif_data["Variable"] = X.columns
+vif_data["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+vif_data
