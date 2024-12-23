@@ -1,0 +1,4 @@
+# Map RiskLevel to integer values
+risk_mapping = {"low risk": 0, "mid risk": 1, "high risk": 2}
+m_df["RiskLevel"] = m_df["RiskLevel"].map(risk_mapping)
+m_df.info()
