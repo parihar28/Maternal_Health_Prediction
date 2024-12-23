@@ -1,0 +1,14 @@
+# Create a pairplot with RiskLevel
+#SystolicBP and DiastolicBP show a high positive correlation (correlation coefficient = 0.79)
+#indicating multicollinearity. This suggests redundancy in information between these two variables.
+risk_colors = {0: "green", 1: "orange", 2: "red"}
+
+plot = sns.pairplot(m_df, hue='RiskLevel',
+                    palette=risk_colors,
+                    markers=["o", "s", "D"])
+
+legend_labels = {"0": "Low", "1": "Mid", "2": "High"}
+for text, label in zip(plot._legend.texts, legend_labels.values()):
+    text.set_text(label)
+plt.savefig("maternal_pairplot_to_see_patterns.png")
+plt.show()
