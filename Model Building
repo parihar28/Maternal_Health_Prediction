@@ -1,0 +1,5 @@
+# Feature scaling
+columns = ["Age", "DiastolicBP", "BS", "BodyTemp", "HeartRate"]
+scale_X = StandardScaler()
+X = pd.DataFrame(scale_X.fit_transform(m_df.drop(["RiskLevel"],axis = 1),), columns = columns)
+y = m_df["RiskLevel"]
