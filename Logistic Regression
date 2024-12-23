@@ -1,0 +1,11 @@
+# Baseline model of Logistic Regression
+logistic_regression = linear_model.LogisticRegression()
+logistic_regression_mod = logistic_regression.fit(X_train, y_train)
+print(f"Baseline Logistic Regression: {round(logistic_regression_mod.score(X_test, y_test), 3)}")
+pred_logistic_regression = logistic_regression_mod.predict(X_test)
+
+# Cross validate Logistic Regression model
+scores_Logistic = cross_val_score(logistic_regression, X_train, y_train, cv=3, scoring="accuracy")
+print(f"Scores(Cross validate) for Logistic Regression model:\n{scores_Logistic}")
+print(f"CrossValMeans: {round(scores_Logistic.mean(), 3)}")
+print(f"CrossValStandard Deviation: {round(scores_Logistic.std(), 3)}")
