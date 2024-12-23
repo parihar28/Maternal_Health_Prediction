@@ -1,0 +1,12 @@
+# Plot boxplots for the feature variables
+fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(20, 15))
+
+for ax, column in zip(axes.flatten(), m_df.columns):
+    sns.boxplot(y=m_df[column],
+                color="#4682B4",
+                ax=ax)
+    ax.set_title(f"{column}", fontsize=18)
+
+plt.tight_layout()
+plt.savefig("materanl_skewed_distribution_to_check_outliars.png")
+plt.show()
