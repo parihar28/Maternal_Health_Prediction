@@ -1,0 +1,18 @@
+# Plot stacked histograms for the feature variables
+fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(30, 25))
+risk_level_order = ["high risk", "mid risk", "low risk"]
+
+for ax, column in zip(axes.flatten(), m_df.columns):
+    sns.histplot(data=m_df,
+                 x=column,
+                 kde=True,
+                 hue="RiskLevel",
+                 hue_order=risk_level_order,
+                 multiple="stack",
+                 palette={"low risk": "green", "mid risk": "orange", "high risk": "red"},
+                 element="bars", ax=ax)
+    ax.set_title(f"{column}", fontsize=25)
+
+plt.tight_layout()
+plt.savefig("maternal_features_description.png")
+plt.show()
