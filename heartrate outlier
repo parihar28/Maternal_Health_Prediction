@@ -1,0 +1,2 @@
+# Identify the outlier in HeartRate
+m_df.HeartRate.sort_values().head()
