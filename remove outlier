@@ -1,0 +1,2 @@
+# Remove the outlier in HeartRate
+m_df = m_df.drop(m_df.index[m_df.HeartRate == 7])
