@@ -1,0 +1,85 @@
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.ensemble import StackingClassifier, GradientBoostingClassifier, RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+# Import necessary libraries for visualization
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 1: Load the dataset
+# Replace 'Maternal Health Risk Data Set.csv' with the path to your dataset
+df = pd.read_csv('Maternal Health Risk Data Set.csv')
+
+# Step 2: Preprocess data if necessary (replace missing values, encoding, etc.)
+# Check for missing values
+print("Missing values in each column:\n", df.isnull().sum())
+
+# Separate features and target variable
+X = df.drop('RiskLevel', axis=1)  # Adjust the column name if necessary
+y = df['RiskLevel']
+
+# Encode the target variable if it is categorical
+y = y.factorize()[0]
+
+# Step 3: Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Step 4: Define base models for stacking
+base_models = [
+    ('decision_tree', DecisionTreeClassifier(random_state=42)),
+    ('random_forest', RandomForestClassifier(n_estimators=100, random_state=42)),
+    ('logistic_regression', LogisticRegression(max_iter=500, random_state=42))
+]
+
+# Step 5: Define meta-classifier
+meta_classifier = GradientBoostingClassifier(n_estimators=100, random_state=42)
+
+# Step 6: Create Stacking Classifier
+stacking_clf = StackingClassifier(
+    estimators=base_models,
+    final_estimator=meta_classifier,
+    cv=StratifiedKFold(n_splits=5),
+    n_jobs=-1
+)
+
+# Step 7: Train the Stacking Classifier
+stacking_clf.fit(X_train, y_train)
+
+# Step 8: Make predictions
+y_pred = stacking_clf.predict(X_test)
+
+# Step 9: Evaluate model performance
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+# Step 9: Evaluate model performance
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+# Step 10: Visualize Accuracy
+plt.figure(figsize=(8, 5))
+plt.bar(['Stacking Classifier'], [accuracy], color='skyblue')
+plt.ylim(0, 1)
+plt.ylabel('Accuracy')
+plt.title('Model Accuracy')
+plt.show()
+
+# Step 11: Visualize Confusion Matrix
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
+            xticklabels=['No Risk', 'Risk'], yticklabels=['No Risk', 'Risk'])
+plt.ylabel('Actual')
+plt.xlabel('Predicted')
+plt.title('Confusion Matrix')
+plt.show()
+
